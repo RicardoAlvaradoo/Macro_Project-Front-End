@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import './landing.css'
+//import './styles/landing.css'
+
 function Landing(props){
   console.log("RAN")
   const [message, setMessage] = useState(<h1>No data yet</h1>);
@@ -25,7 +26,7 @@ function Landing(props){
       let orders = result.data.rest;
       const arrayDataItems = orders.map( items=> 
         
-        <p>{items[1][0]} {items[1][1]} {items[1][2]} {items[1][3]}</p>
+        <p>Restaurant: {items[1][0]} Order: {items[1][1]} Calories: {items[1][2]} Fat: {items[1][3]}  Protein: {items[1][4]}</p>
          
       )
         setMessage( arrayDataItems );
