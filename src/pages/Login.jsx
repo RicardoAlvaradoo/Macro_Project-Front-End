@@ -1,11 +1,11 @@
 
-
+import Form from "../components/Form"
 import react from 'react'
 
 function Login(){
     return (
     
-        <h1>Login</h1>
+        <Form route="/token" method="login"/>
     )
 }
 

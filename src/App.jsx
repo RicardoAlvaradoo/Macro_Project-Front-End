@@ -1,17 +1,17 @@
 import react from 'react'
 import  {BrowserRouter, Routes, Route, Navigate} from "react-router-dom"
 import Login from "./pages/Login"
-import Logout from "./pages/Logout"
+
 import Register from "./pages/Register"
 import Landing from "./pages/Landing"
 import NotFound from "./pages/NotFound"
 import './styles/App.css'
 function Logout(){
-  localStorate.clear()
+  localStorage.clear()
   return <Navigate to ="/login"/>
 }
 function RegisterAndLogout(){
-  localStorate.clear()
+  localStorage.clear()
   return <Register/>
 }
 function App() {
