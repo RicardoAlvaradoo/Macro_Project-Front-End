@@ -6,7 +6,8 @@ import './styles/Index.css'
 import Landing from './pages/Landing.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  <React.StrictMode id ="home">
+    
     <App />
   </React.StrictMode>,
 )

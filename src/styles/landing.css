@@ -1,0 +1,99 @@
+#Landing{
+    background-color:#A7BF95;
+    
+    position: absolute;
+    top: 15%;
+    left:0px;
+    width: 100%;
+    padding-left: 12.5%;
+}
+
+#search{
+    background-color: #2F4D17;
+    color: white;
+    border-radius: 25px;
+    overflow: hidden;
+}
+/* Messages */
+.Data p{
+    color: black;
+    padding: 0px;
+    margin: 0px;
+    
+    
+}
+.Data h1{
+    color: black;
+    width: 50px;
+    
+}
+/* Sliders stuff */
+.Container {
+   display: flex;
+   text-align: right;
+   
+    
+}
+.Container span{
+  
+   
+     
+ }
+.label {
+
+    
+    
+    width: 25%;
+}
+
+.sliderBox{
+    width: 50%;   
+    flex-grow: 1;
+}
+input[type='range'] {
+    -webkit-appearance: none; 
+   height: 7px; 
+   background: white; 
+   width: 80%;
+   background-image: linear-gradient(#2F4D17, #2F4D17); 
+   background-repeat: no-repeat; 
+
+   }
+   input[type='range']::-webkit-slider-thumb { 
+    -webkit-appearance: none; 
+    height: 20px; 
+    width: 20px; 
+    border-radius: 50%; 
+    background: white; 
+    cursor: pointer; 
+    box-shadow: 0 0 2px 0 #555; 
+    }
+    input[type="range"]::-webkit-slider-runnable-track { 
+        -webkit-appearance: none; 
+        box-shadow: none; 
+        border: none; 
+        background: transparent; 
+        }
+/*organization of website*/
+
+
+.column{
+    float: left;
+    align-items: center;
+    width: 50%;
+    
+}
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+    width: 100%;
+    
+  }
+#logo-map{
+   
+height: 476px;
+  width:476px;
+}
+
+   
