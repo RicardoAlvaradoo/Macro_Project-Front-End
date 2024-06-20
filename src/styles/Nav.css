@@ -5,6 +5,8 @@
   
   margin: 0px;
   padding-top:5px;
+  position: relative;
+  left: 50px;
   text-align: left;
 }
 h2{
@@ -20,8 +22,8 @@ h2{
     left:0;
     width: 100vw;
     position: absolute;
-   display: flex;
-  
+   display: inline-block;
+    height: 5%;
     
   }
   
@@ -39,10 +41,13 @@ h2{
   .topnav ul{
     list-style-type: none;
     padding-top: 12px;
+    padding-right: 5%;
     margin: 0px;
     text-align: right;
     overflow: hidden;
-   
+   float: right;
+   position: relative;
+    bottom: 45px;
   }
 
   .topnav li{
@@ -66,7 +71,7 @@ h2{
     height: 20px;
     width: 20px;
     position: relative;
-    top: 9px;
+    top: 0px;
     left: 15px;
     
   }
