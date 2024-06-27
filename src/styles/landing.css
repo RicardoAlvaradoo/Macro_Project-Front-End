@@ -1,11 +1,20 @@
+
+
+body{
+  
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: 99;
+    align-items: center;
+}
+
 #Landing{
+   
     background-color:#A7BF95;
+    width: 80vw;
+    height: 80vh;
     
-    position: absolute;
-    top: 15%;
-    left:0px;
-    width: 100%;
-    padding-left: 9%;
 }
 form{
     align-items: center;

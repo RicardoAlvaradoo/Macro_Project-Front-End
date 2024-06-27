@@ -1,0 +1,21 @@
+.input-name{
+    background-color: red;
+}
+.modal{
+    position: absolute;
+    top: 50%;
+    left:25%
+    
+
+}
+.pop{
+    
+}
+.form{
+    pointer-events: none;
+    outline: red;
+    filter: blur(8px);
+  -webkit-filter: blur(2px);
+}
+
+
