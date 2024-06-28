@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 function Items(order) {
+  console.log(order['0']);
     async function saveFavorite(){
-
+      
     const options = {
         method: "POST",
         mode: 'cors',
@@ -19,13 +20,14 @@ function Items(order) {
        })
     };
     return (
-        <>  
+        <li key={order[1][0]}>  
+          
             <span> {order[1][0]} Order: {order[1][1]} Calories: {order[1][2]} Fat: {order[1][3]}  Protein: {order[1][4]}</span>
             <button onClick={saveFavorite}></button>
-        </>
+        </li>
     )
 }
-
+export default Items;
 
 /**await fetch(url, options).then(response => response.json().then(result => {
           result = JSON.stringify(result)

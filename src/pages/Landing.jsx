@@ -12,12 +12,12 @@ function Landing(props) {
 
   //use function to display login message below search if user not logged in after one 
   //input
-  const [favorites, setFavories] = useState("");
+  const [favorites, setFavorites] = useState("");
   const [profiles, setProfiles] = useState("");
   let userStatus = ProtectFunc();
 
   useEffect(() => { getProfiles(); }, []);
-  
+  useEffect(() => { getFavorites(); }, []);
    async function getProfiles ()  {
     let options = {
       method:"GET",
@@ -34,7 +34,7 @@ function Landing(props) {
         <li key={items.id}>
         <span >{items.name}  </span>
        
-        <button  className="profile-button" onClick={() => deleteProfile(items.id)}>Delete</button>
+        <button  className="profile-button" onClick={() => onDelete(items.id, "profile")}>Delete</button>
         </li>
       )
      
@@ -48,7 +48,7 @@ function Landing(props) {
 
   };
   //delete
-  async function onDelete(id) {
+  async function onDelete(id, method) {
     let option = {
       method:"DELETE",
       mode:'cors',
@@ -56,9 +56,10 @@ function Landing(props) {
       
       }
     };
-    await fetchUserData( option, `/profile/delete/${id}`).then(response => {
+
+    await fetchUserData( option, `/${method}/delete/${id}`).then(response => {
       if (response.status == 204){
-        alert("Deleted Order!");
+        alert("Delete Succesful!");
       }else{
         alert("Failed to Delete")
       }
@@ -91,7 +92,7 @@ function Landing(props) {
         <span >{items.protein}  </span>
         <span >{items.carb}  </span>
         <span >{items.calories}  </span>
-        <button  className="profile-button" onClick={() => deleteFavorite(items.id)}>Delete</button>
+        <button  className="profile-button" onClick={() => onDelete(items.id, "favorite")}>Delete</button>
         </li>
       )
      
@@ -121,7 +122,7 @@ function Landing(props) {
 
           <div className='column'>
             {profiles}
-         
+            {favorites}
           
           </div>
 
