@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-
-
+import { fetchUserData } from '../services/fetchUser.js';
 
 import '../styles/landing.css'
 import Nav from '../components/Nav'
@@ -13,35 +12,98 @@ function Landing(props) {
 
   //use function to display login message below search if user not logged in after one 
   //input
+  const [favorites, setFavories] = useState("");
   const [profiles, setProfiles] = useState("");
   let userStatus = ProtectFunc();
 
   useEffect(() => { getProfiles(); }, []);
   
    async function getProfiles ()  {
-    const options = {
+    let options = {
       method:"GET",
       mode:'cors',
       headers: {
-
+      
       }
     };
-    await fetch('http://127.0.0.1:8000/profile', options).then(response =>response.json().then(result => {
-      result = JSON.stringify(result)
-      result = JSON.parse(result);
-      result = JSON.parse(result);
-      console.log("Received data value: ", result);
-      setProfiles(result);
-    })) .catch(error => {
+   await fetchUserData( options, '/profile').then(response => response.json().then( response => {
+    
+      
+      
+      const currentProfiles = response.map((items) => 
+        <li key={items.id}>
+        <span >{items.name}  </span>
+       
+        <button  className="profile-button" onClick={() => deleteProfile(items.id)}>Delete</button>
+        </li>
+      )
+     
+      
+      console.log("Received data value: ", response);
+      setProfiles(<ul> {currentProfiles}</ul>);
+    })).catch(error => {
       console.log(error);
     });
     
 
-  }
-  //slider logic
+  };
+  //delete
+  async function onDelete(id) {
+    let option = {
+      method:"DELETE",
+      mode:'cors',
+      headers: {
+      
+      }
+    };
+    await fetchUserData( option, `/profile/delete/${id}`).then(response => {
+      if (response.status == 204){
+        alert("Deleted Order!");
+      }else{
+        alert("Failed to Delete")
+      }
+      getProfiles ();
 
-  //distance
+    }).catch(error => {
+      console.log(error);
+  });
+};
   
+
+  //favorites code
+  async function getFavorites ()  {
+    let options = {
+      method:"GET",
+      mode:'cors',
+      headers: {
+      
+      }
+    };
+   await fetchUserData( options, '/favorite').then(response => response.json().then( response => {
+    
+      
+      
+      const currentFavorites = response.map((items) => 
+        <li key={items.id}>
+        <span >{items.restaurant}  </span>
+        <span >{items.order_name}  </span>
+        <span >{items.fat}  </span>
+        <span >{items.protein}  </span>
+        <span >{items.carb}  </span>
+        <span >{items.calories}  </span>
+        <button  className="profile-button" onClick={() => deleteFavorite(items.id)}>Delete</button>
+        </li>
+      )
+     
+      
+      console.log("Received data value: ", response);
+      setFavorites(<ul> {currentFavorites}</ul>);
+    })).catch(error => {
+      console.log(error);
+    });
+    
+
+  };
   return (
 
 
@@ -51,7 +113,7 @@ function Landing(props) {
 
         <div className='row'>
           <div className='column'>
-            <Send_Form/>
+            <Send_Form getProfile={getProfiles} getFavorite={getFavorites} />
             <div id='Log-In'>
             <a href='Login'>Log in</a><span> to view previous orders and save your profile.</span>
             </div>
@@ -59,6 +121,7 @@ function Landing(props) {
 
           <div className='column'>
             {profiles}
+         
           
           </div>
 
