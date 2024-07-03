@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-function Items(order) {
-  console.log(order['0']);
-    async function saveFavorite(){
+function Items({order}) {
+  
+  console.log("In items" + order);
+ 
+  async function saveFavorite(){
       
     const options = {
         method: "POST",
@@ -19,11 +21,12 @@ function Items(order) {
         console.log(error)
        })
     };
+    
     return (
         <li key={order[1][0]}>  
           
             <span> {order[1][0]} Order: {order[1][1]} Calories: {order[1][2]} Fat: {order[1][3]}  Protein: {order[1][4]}</span>
-            <button onClick={saveFavorite}></button>
+            <button onClick={saveFavorite}>Favorite</button>
         </li>
     )
 }

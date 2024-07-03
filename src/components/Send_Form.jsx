@@ -5,14 +5,12 @@ import { fetchUserData } from '../services/fetchUser.js';
 import Items from '../components/Items.jsx'
 import { json } from 'react-router-dom';
 function Send_Form(props, getProfiles, getFavorite) {
-  const [message, setMessage] = useState(<><h1>Find Macros</h1>
-    <p>Input information to find menu items that meet your macro needs near you!</p>
-  </>);
+  const [message, setMessage] = useState(true);
+  const [order_list, setOrders] = useState([]);
   const [dist, set_dist] = useState(5);
   const MAX = 10;
   const [user, setUser] = useState(props.user)
   //popup
-
 
   async function getProfile(name) {
     setUser({ ...user, profile_name: name });
@@ -29,7 +27,7 @@ async function restaurant_data(save) {
     let url = '/orders';
     console.log("value" + user);
     if (save) {
-      url = '/profile'
+      url = (`/profile/${ JSON.stringify({ user })}`)
     }
 
     //const csrftoken =  getCookie('csrftoken');
@@ -47,12 +45,15 @@ async function restaurant_data(save) {
      {
       if (!save) {
       
-        result = JSON.stringify(result)
-        result = JSON.parse(result);
+        console.log("Order list", result);
+        
         result = JSON.parse(result);
         let order_list = result.data.rest;
         console.log("We have received", order_list, response)
-        setMessage(order_list.map(item => <Items order={item}/>) )
+        //let final_message = order_list.map(item => <Items order={item}/>
+        setOrders(order_list);
+        setMessage(false) ;
+      
       }
     })).catch(error => {
       console.log(error)
@@ -71,9 +72,19 @@ async function restaurant_data(save) {
 
     <>
       <div className='Data'>
+      {message && (<span>Find Macros
+        Input information to find menu items that meet your macro needs near you!
+      </span>)}
+      {!message && (<ul>
+          {order_list.map((order) => (
+            <Items order={order}/>
+            
+          ))} </ul>)}
 
-        <span>{message}</span>
+          
+      
 
+       
       </div>
       <div className='popup'>
         <Popup getProfile={getProfile}>

@@ -49,7 +49,7 @@ color:  #DAE8D1;
 
 text-align: center;
 }
-.input-data:focus, input:focus {
+.input-data:focus {
     color: #DAE8D1;
     outline: none;
 }
@@ -115,12 +115,8 @@ appearance: none    ;
     
     
   }
-#logo-map{
-   float: left;
-height: 400px;
-  width:400px;
-  padding-top: 30px;
-}
+
+
 .semi{
     font-size: 30px;
     padding-left: 10px;
@@ -135,4 +131,23 @@ height: 400px;
 #Log-In a{
     text-decoration: underline;
     color: #65844D ;  
+}
+
+.display ul{
+    list-style-type: none;
+}
+.display li{
+    list-style-type: none;
+    background-color: #65844D ;
+    width: 90%;;
+    padding: 0;
+    margin: 0;
+}
+.display{
+    background-color: #A7BF95;
+    border-style: double;
+    
+}
+.display-container{
+    column-count: 2;
 }

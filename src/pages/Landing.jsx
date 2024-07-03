@@ -34,13 +34,13 @@ function Landing(props) {
         <li key={items.id}>
         <span >{items.name}  </span>
        
-        <button  className="profile-button" onClick={() => onDelete(items.id, "profile")}>Delete</button>
+        <button  className="delete-button" onClick={() => onDelete(items.id, "profile")}>Delete</button>
         </li>
       )
      
       
       console.log("Received data value: ", response);
-      setProfiles(<ul> {currentProfiles}</ul>);
+      setProfiles(<ul > {currentProfiles}</ul>);
     })).catch(error => {
       console.log(error);
     });
@@ -92,7 +92,7 @@ function Landing(props) {
         <span >{items.protein}  </span>
         <span >{items.carb}  </span>
         <span >{items.calories}  </span>
-        <button  className="profile-button" onClick={() => onDelete(items.id, "favorite")}>Delete</button>
+        <button  className="delete-button" onClick={() => onDelete(items.id, "favorite")}>Delete</button>
         </li>
       )
      
@@ -121,8 +121,11 @@ function Landing(props) {
           </div>
 
           <div className='column'>
-            {profiles}
-            {favorites}
+            <div className='display-container'>
+            <div className='display'> {profiles}</div>
+            <div className='display'>   {favorites}</div>
+            </div>
+          
           
           </div>
 
