@@ -1,21 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fetchUserData } from '../services/fetchUser.js';
-function Items({order, getFavorites}) {
+function Items({order, getFavorites,}) {
   
   console.log("In items" + order);
- 
+  
+
   async function saveFavorite(restaurant, order_name, fat, carb, protein, calories ){
       
-    const options = {
-        method: "POST",
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-  
-        },
-        body: JSON.stringify({restaurant, order_name, fat,carb, protein, calories }),
-        }
-       await fetchUserData(options, "/favorite/").then(response =>  { 
+    
+      data = {restaurant, order_name, fat,carb, protein, calories };
+        
+       await fetchUserData(options, "/favorite/", data).then(response =>  { 
         console.log("We have received", response)
         if (response.status ==201){
           getFavorites();
@@ -30,10 +25,10 @@ function Items({order, getFavorites}) {
     };
     
     return (
-        <li key={order[1][0]}>  
+        <li key={order.restaurant}>  
           
-            <span> {order[1][0]} Order: {order[1][1]} Calories: {order[1][2]} Fat: {order[1][3]}  Protein: {order[1][4]}</span>
-            <button onClick={() => saveFavorite(order[1][0],order[1][1], order[1][3],order[1][4],order[1][5], order[1][2] )}>Favorite</button>
+            <span> {order.restaurant} Order: {order.order_name} Calories: {order.calories} Fat: {order.fat}  Protein: {order.protein}</span>
+            <button onClick={() => saveFavorite(order.restaurant,orderorder_name, order.fat,order.carb,order.protein, order.calories )}>Favorite</button>
         </li>
     )
 }

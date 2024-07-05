@@ -2,11 +2,11 @@
 import Popup from '../components/Popup.jsx'
 import React, { useState, useEffect, useRef } from 'react';
 import { fetchUserData } from '../services/fetchUser.js';
-import Items from '../components/Items.jsx'
+
 import { json } from 'react-router-dom';
-function Send_Form({props,getProfiles, getFavorites}) {
-  const [message, setMessage] = useState(true);
-  const [order_list, setOrders] = useState([]);
+function Send_Form({props, search}) {
+ 
+  
   const [dist, set_dist] = useState(5);
   const MAX = 10;
   const [user, setUser] = useState(props.user)
@@ -19,54 +19,13 @@ function Send_Form({props,getProfiles, getFavorites}) {
   };
   
 
-async function restaurant_data(save, name) {
-    let url = '/orders/';
-    
-    let data = user;
-   
-    
-    
-      if (save) {
-        data = {profile_name: name, ...user}
-        url = '/profile/';
-}
-
-    //const csrftoken =  getCookie('csrftoken');
-    let options = {
-      method: "POST",
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-
-      },
-      body: JSON.stringify({ data}),
-    }
- 
-    await fetchUserData(options, url).then(response => response.json().then(result => 
-     {
-      if (!save) {
-      
-        console.log("Order list", result);
-        
-        result = JSON.parse(result);
-        let order_list = result.data.rest;
-        console.log("We have received", order_list, response)
-        //let final_message = order_list.map(item => <Items order={item}/>
-        setOrders(order_list);
-        setMessage(false) ;
-      
-      }
-      getProfiles();
-      
-    })).catch(error => {
-      console.log(error)
-    })
-  };
-
   async function handleSubmit(e) {
 
     e.preventDefault();
-    restaurant_data(false);
+    search(user, null);
+  }
+  async function handleSave(name) {
+    search(user, name);
   }
 
 
@@ -74,23 +33,9 @@ async function restaurant_data(save, name) {
   return (
 
     <>
-      <div className='Data'>
-      {message && (<span>Find Macros
-        Input information to find menu items that meet your macro needs near you!
-      </span>)}
-      {!message && (<ul>
-          {order_list.map((order) => (
-            <Items order={order} getFavorites={getFavorites}/>
-            
-          ))} </ul>)}
-
-          
       
-
-       
-      </div>
       <div className='popup'>
-        <Popup getRestaurant={restaurant_data}>
+        <Popup saveProfile={handleSave}>
           <form >
 
             <div className='Container'>
