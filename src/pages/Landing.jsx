@@ -28,11 +28,11 @@ function Landing(props) {
     };
    await fetchUserData( options, '/profile').then(response => response.json().then( response => {
     
-      
+      console.log("Calling with, ", response)
       
       const currentProfiles = response.map((items) => 
         <li key={items.id}>
-        <span >{items.name}  </span>
+        <span >{items.profile_name}  </span>
        
         <button  className="delete-button" onClick={() => onDelete(items.id, "profile")}>Delete</button>
         </li>
@@ -114,7 +114,7 @@ function Landing(props) {
 
         <div className='row'>
           <div className='column'>
-            <Send_Form getProfile={getProfiles} getFavorite={getFavorites} />
+            <Send_Form props={{}}getProfiles={getProfiles} getFavorites={getFavorites} />
             <div id='Log-In'>
             <a href='Login'>Log in</a><span> to view previous orders and save your profile.</span>
             </div>

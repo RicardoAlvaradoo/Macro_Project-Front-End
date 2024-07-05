@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { fetchUserData } from '../services/fetchUser.js';
 import Items from '../components/Items.jsx'
 import { json } from 'react-router-dom';
-function Send_Form(props, getProfiles, getFavorite) {
+function Send_Form({props,getProfiles, getFavorites}) {
   const [message, setMessage] = useState(true);
   const [order_list, setOrders] = useState([]);
   const [dist, set_dist] = useState(5);
@@ -12,35 +12,36 @@ function Send_Form(props, getProfiles, getFavorite) {
   const [user, setUser] = useState(props.user)
   //popup
 
-  async function getProfile(name) {
-    setUser({ ...user, profile_name: name });
-
-    restaurant_data(true);
-  }
+  
   //slider logic
   const getBackgroundSize = () => {
     return { backgroundSize: `${(dist * 100) / MAX}% 100%` };
   };
   
 
-async function restaurant_data(save) {
-    let url = '/orders';
-    console.log("value" + user);
-    if (save) {
-      url = (`/profile/${ JSON.stringify({ user })}`)
-    }
+async function restaurant_data(save, name) {
+    let url = '/orders/';
+    
+    let data = user;
+   
+    
+    
+      if (save) {
+        data = {profile_name: name, ...user}
+        url = '/profile/';
+}
 
     //const csrftoken =  getCookie('csrftoken');
-
-    const options = {
+    let options = {
       method: "POST",
       mode: 'cors',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
 
       },
-      body: JSON.stringify({ user }),
+      body: JSON.stringify({ data}),
     }
+ 
     await fetchUserData(options, url).then(response => response.json().then(result => 
      {
       if (!save) {
@@ -55,6 +56,8 @@ async function restaurant_data(save) {
         setMessage(false) ;
       
       }
+      getProfiles();
+      
     })).catch(error => {
       console.log(error)
     })
@@ -77,7 +80,7 @@ async function restaurant_data(save) {
       </span>)}
       {!message && (<ul>
           {order_list.map((order) => (
-            <Items order={order}/>
+            <Items order={order} getFavorites={getFavorites}/>
             
           ))} </ul>)}
 
@@ -87,7 +90,7 @@ async function restaurant_data(save) {
        
       </div>
       <div className='popup'>
-        <Popup getProfile={getProfile}>
+        <Popup getRestaurant={restaurant_data}>
           <form >
 
             <div className='Container'>

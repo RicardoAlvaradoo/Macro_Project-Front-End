@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import ProtectFunc from '../components/ProtectFunc.jsx';
 
 
-const Popup =({children, getProfile}) => {
+const Popup =({children, getRestaurant}) => {
     const [name, setName] = useState("");
     const [modal, setModal] = useState(false);
     const [styles, setStyle] = useState(false);
@@ -21,10 +21,11 @@ const Popup =({children, getProfile}) => {
 
     const toggleSend
         = () => {
-            getProfile(name);
+            console.log("CALLED IN POP", name)
+            getRestaurant(true, name);
             setModal(!modal);
             setStyle(!styles);
-            console.log("Profile name", name);
+            
             
         }
     return (
