@@ -22,7 +22,7 @@ function Send_Form({props, search}) {
   async function handleSubmit(e) {
 
     e.preventDefault();
-    search(user, null);
+    search(user,false);
   }
   async function handleSave(name) {
     search(user, name);
@@ -35,7 +35,7 @@ function Send_Form({props, search}) {
     <>
       
       <div className='popup'>
-        <Popup saveProfile={handleSave}>
+        <Popup handleSave={handleSave}>
           <form >
 
             <div className='Container'>

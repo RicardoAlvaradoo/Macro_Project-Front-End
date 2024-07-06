@@ -8,9 +8,9 @@ function Items({order, getFavorites,}) {
   async function saveFavorite(restaurant, order_name, fat, carb, protein, calories ){
       
     
-      data = {restaurant, order_name, fat,carb, protein, calories };
+      let data = {restaurant, order_name, fat,carb, protein, calories };
         
-       await fetchUserData(options, "/favorite/", data).then(response =>  { 
+       await fetchUserData("POST", "/favorite/", data).then(response =>  { 
         console.log("We have received", response)
         if (response.status ==201){
           getFavorites();
@@ -25,10 +25,10 @@ function Items({order, getFavorites,}) {
     };
     
     return (
-        <li key={order.restaurant}>  
+        <li key={order.info.item_name}>  
           
-            <span> {order.restaurant} Order: {order.order_name} Calories: {order.calories} Fat: {order.fat}  Protein: {order.protein}</span>
-            <button onClick={() => saveFavorite(order.restaurant,orderorder_name, order.fat,order.carb,order.protein, order.calories )}>Favorite</button>
+            <span> {order.info.restaurant} Order: {order.info.item_name} Calories: {order.info.calories} Fat: {order.info.fat}  Protein: {order.info.protein}</span>
+            <button onClick={() => saveFavorite(order.info.restaurant,order.info.item_name, order.info.fat,order.info.carb,order.info.protein, order.info.calories )}>Favorite</button>
         </li>
     )
 }

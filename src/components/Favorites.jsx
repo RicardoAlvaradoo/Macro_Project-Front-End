@@ -9,7 +9,7 @@ function Favorites({item ,onDelete}) {
     <span >{item.protein}  </span>
     <span >{item.carb}  </span>
     <span >{item.calories}  </span>
-    <button className="delete-button" onClick={() => onDelete(items.id, "favorite")}>Delete</button>
+    <button className="item-button" onClick={() => onDelete(item.id, "favorite")}>Delete</button>
   </li>)
 }
 export default Favorites;

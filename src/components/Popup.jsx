@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, Children } from 'react';
 import '../styles/Popup.css'
 import classnames from 'classnames';
 
-import ProtectFunc from '../components/ProtectFunc.jsx';
+
 
 
 const Popup =({children, handleSave}) => {

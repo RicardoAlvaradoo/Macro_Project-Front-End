@@ -1,29 +1,40 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fetchUserData } from '../services/fetchUser.js';
-
+import  { Navigate, useNavigate} from "react-router-dom"
 import '../styles/landing.css'
 import Nav from '../components/Nav'
-import Image from '../assets/image.png'
+
 import Send_Form from '../components/Send_Form'
 import Items from '../components/Items'
 import Profiles from '../components/Profiles.jsx'
 import Favorites from '../components/Favorites'
-import ProtectFunc from '../components/ProtectFunc'
+import isAuth from '../components/Auth.jsx'
 function Landing(props) {
-  console.log("RAN")
 
 
+  
   //use function to display login message below search if user not logged in after one 
   //input
   const [favorites, setFavorites] = useState([]);
   const [profiles, setProfiles] = useState([]);
   const [order_list, setOrders] = useState([]);
   const [message, setMessage] = useState(true);
-  let userStatus = ProtectFunc();
+  const current_location = useRef(null);
+  const auth = useRef(false);
+  
+  auth.current = async () => await isAuth(); 
+  
  
+  
+  useEffect(() => {
+    console.log("Auth 2", auth.current);
+    if (auth.current) {
+      
+      getProfiles();
+      getFavorites();
+    }
+  }, [auth]);
 
-  useEffect(() => { getProfiles(); }, []);
-  useEffect(() => { getFavorites(); }, []);
 
   async function getProfiles() {
     await fetchUserData("GET", '/profile', null).then(response => response.json().then(response => {
@@ -37,7 +48,7 @@ function Landing(props) {
     await fetchUserData("GET", '/favorite', null).then(response => response.json().then(response => {
 
       console.log("Received data value: ", response);
-      setFavorites(currentFavorites);
+      setFavorites(response);
     })).catch(error => {
       console.log(error);
     });
@@ -49,7 +60,12 @@ function Landing(props) {
       } else {
         alert("Failed to Delete")
       }
-      getProfiles();
+      if (method = "favorite") {
+        getFavorites();
+      } else {
+        getProfiles();
+      }
+
 
     }).catch(error => {
       console.log(error);
@@ -58,9 +74,9 @@ function Landing(props) {
 
   async function search(user, name) {
     let url;
-    let location = null;
+   
     let data;
-    if (profile_name) {
+    if (name) {
       data = { profile_name: name, ...user }
       url = '/profile/';
     } else {
@@ -69,21 +85,23 @@ function Landing(props) {
       //get location
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
-
-          location = { latitude: position.coords.latitude, latitude: position.coords.longitude }
+          console.log("WER AREIVE ")
+          current_location.current = { latitude: position.coords.latitude, longitude: position.coords.longitude };
         });
       } else {
         console.log("Error in getting location");
       }
-      data = { ...user, location: location }
+      data = { ...user, location: current_location }
     }
     await fetchUserData("POST", url, data).then(response => response.json().then(result => {
-      if (!profile_name) {
-        //console.log("Order list", result);
-       
-        let order_list = result;
+      if (!name) {
+        console.log("Order list",result);
+
+        let order_list = result.data;
+        order_list = JSON.parse(order_list);
         //console.log("We have received", order_list, response)
         setOrders(order_list);
+        console.log("Checker OrderLIST", order_list[0], typeof(order_list[0]))
         setMessage(false);
 
       } else {
@@ -94,55 +112,88 @@ function Landing(props) {
     })
   };
 
-
-return (
-
-
-  <>
-    <Nav auth={userStatus} />
-    <div id="Landing">
-
-      <div className='row'>
-        <div className='column'>
-          <div className='Data'>
-            {message && (<span>Find Macros
-              Input information to find menu items that meet your macro needs near you!
-            </span>)}
-            {!message && (<ul>
-              {order_list.map((order) => (
-                <Items order={order} getFavorites={getFavorites} />
-
-              ))} </ul>)}
+ const navigate = useNavigate();
+  const handleLogin = () => {
+    navigate('/login');
+  }
+  console.log("RAN", favorites, profiles, auth.current)
+  return (
 
 
+    <>
+      <Nav auth={auth} />
+      <div id="Landing">
+
+        <div className='row'>
+          <div className='column'>
+            <div className='Data'>
+              {message && (<span>Find Macros
+                Input information to find menu items that meet your macro needs near you!
+              </span>)}
+              {!message && (<ul>
+                {order_list.map((order) => (
+                  <Items order={order} getFavorites={getFavorites} />
+
+                ))} </ul>)}
 
 
 
+
+
+            </div>
+            <Send_Form props={{}} search={search} />
+            <div id='Log-In'>
+              <a href='Login'>Log in</a><span> to view previous orders and save your profile.</span>
+            </div>
           </div>
-          <Send_Form props={{}}  search={search} />
-          <div id='Log-In'>
-            <a href='Login'>Log in</a><span> to view previous orders and save your profile.</span>
-          </div>
-        </div>
 
-        <div className='column'>
-          <div className='display-container'>
-            <div className='display'> (<ul>
-              {favorites.map((item) => (
-                <Favorites item={item} onDelete={onDelete} />
+          <div className='column'>
+            <div className='display-container'>
+              <div className='display'>
+              { /*Not Logged In message */}
+                {(!auth.current) &&
+                  (<button onClick={handleLogin}>Log In To View </button>)
+                }
+                { /*Logged in, no profiles*/} 
+                {(auth.current) && (profiles.length == 0) && (
+                  <h2>Save Profiles to have them displayed!</h2>
+                )
+                }
+              { /*Logged in, profiles*/}
+                {(profiles.length != 0) && (<ul>
+                  {profiles.map((profile) => (
+                    <Profiles profile={profile} onSearch={search} onDelete={onDelete} />
 
-              ))} </ul>)
+                  ))} </ul>)}
+
               </div>
-            <div className='display'>   {favorites}</div>
+              <div className='display'>
+              { /*Not Logged In message */}
+                {(!auth.current) &&
+                  (<button onClick={handleLogin}> Log In To View</button>)
+                }
+              { /*Logged in, no profiles*/}
+                {(auth.current) && (favorites.length == 0) && (
+                  <h2>Save Favorites to have them displayed!</h2>
+                )
+
+                }
+                { /*Logged in, profiles*/}
+                {(favorites.length != 0) && (<ul>
+                  {favorites.map((item) => (
+                    <Favorites item={item} onDelete={onDelete} />
+
+                  ))} </ul>)}
+              </div>
+            </div>
+
+
           </div>
 
-
         </div>
-
       </div>
-    </div>
-  </>
-);
+    </>
+  );
 
 }
 

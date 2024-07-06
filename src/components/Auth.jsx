@@ -1,10 +1,11 @@
 import { Navigate } from "react-router-dom"
 import { jwtDecode } from "jwt-decode"
-import api from "../api"
+
 import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants"
 import { useState, useEffect } from "react"
+import { fetchUserData } from '../services/fetchUser.js';
 
-function ProtectFunc() {
+    function isAuth() {
     const [isAuthorized, setIsAuthorized] = useState(null)
     useEffect(() => {
         auth().catch(() => setIsAuthorized(false))
@@ -12,10 +13,7 @@ function ProtectFunc() {
     const refreshToken = async () => {
         const refreshToken = localStorage.getItem(REFRESH_TOKEN);
         try {
-            const res = await api.post("/token/refresh/", {
-                refresh: refreshToken
-
-            });
+            const res = await fetchUserData("POST","/token/refresh/", {refreshToken: refreshToken});
             if (res.status === 200) {
                 localStorage.setItem(ACCESS_TOKEN, res.data.access);
                 setIsAuthorized(true);
@@ -42,10 +40,8 @@ function ProtectFunc() {
             setIsAuthorized(true)
         }
     }
-    if (isAuthorized === null) {
-        return <Navigate to="/login"/>
-    }
+    
     //login should be swapped to Functionality Limited page
     return isAuthorized ?  true: false 
 }
-export default ProtectFunc;
+export default isAuth;
