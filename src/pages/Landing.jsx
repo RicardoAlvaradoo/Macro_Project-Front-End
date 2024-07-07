@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fetchUserData } from '../services/fetchUser.js';
-import  { Navigate, useNavigate} from "react-router-dom"
+import { Navigate, useNavigate } from "react-router-dom"
 import '../styles/landing.css'
 import Nav from '../components/Nav'
 
@@ -8,33 +8,41 @@ import Send_Form from '../components/Send_Form'
 import Items from '../components/Items'
 import Profiles from '../components/Profiles.jsx'
 import Favorites from '../components/Favorites'
-import isAuth from '../components/Auth.jsx'
+import { isAuth } from '../components/Auth.js'
 function Landing(props) {
 
 
-  
+
   //use function to display login message below search if user not logged in after one 
   //input
+
   const [favorites, setFavorites] = useState([]);
   const [profiles, setProfiles] = useState([]);
   const [order_list, setOrders] = useState([]);
   const [message, setMessage] = useState(true);
-  const current_location = useRef(null);
-  const auth = useRef(false);
-  
-  auth.current = async () => await isAuth(); 
-  
- 
-  
-  useEffect(() => {
-    console.log("Auth 2", auth.current);
-    if (auth.current) {
-      
-      getProfiles();
-      getFavorites();
-    }
-  }, [auth]);
+  const [user, setUser] = useState(false);
 
+
+
+
+  useEffect(() => {getAuth()}, []);
+
+
+
+  console.log("Auth 2", user);
+  
+  
+
+  async function getAuth() {
+      await isAuth().then(response => {
+      console.log(response);
+      setUser(response);
+      if (response){
+        getProfiles();
+        getFavorites();
+      }
+    });
+  }
 
   async function getProfiles() {
     await fetchUserData("GET", '/profile', null).then(response => response.json().then(response => {
@@ -72,36 +80,42 @@ function Landing(props) {
     });
   };
 
+  async function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        console.log("WER AREIVE ")
+        return data = { latitude: position.coords.latitude, longitude: position.coords.longitude };
+      });
+    } else {
+      console.log("Error in getting location");
+    }
+  }
   async function search(user, name) {
     let url;
-   
+
     let data;
+    //saving profile
     if (name) {
       data = { profile_name: name, ...user }
       url = '/profile/';
-    } else {
+    }//searching based off profile or normal search
+    else {
 
       url = '/orders/';
       //get location
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          console.log("WER AREIVE ")
-          current_location.current = { latitude: position.coords.latitude, longitude: position.coords.longitude };
-        });
-      } else {
-        console.log("Error in getting location");
-      }
-      data = { ...user, location: current_location }
+      location = await getLocation();
+      data = { ...user, location: location,}
+
     }
     await fetchUserData("POST", url, data).then(response => response.json().then(result => {
       if (!name) {
-        console.log("Order list",result);
+        console.log("Order list", result);
 
         let order_list = result.data;
         order_list = JSON.parse(order_list);
         //console.log("We have received", order_list, response)
         setOrders(order_list);
-        console.log("Checker OrderLIST", order_list[0], typeof(order_list[0]))
+        console.log("Checker OrderLIST", order_list[0], typeof (order_list[0]))
         setMessage(false);
 
       } else {
@@ -112,16 +126,16 @@ function Landing(props) {
     })
   };
 
- const navigate = useNavigate();
+  const navigate = useNavigate();
   const handleLogin = () => {
     navigate('/login');
   }
-  console.log("RAN", favorites, profiles, auth.current)
+  console.log("RAN", favorites, profiles, user)
   return (
 
 
     <>
-      <Nav auth={auth} />
+      <Nav auth={user} />
       <div id="Landing">
 
         <div className='row'>
@@ -150,16 +164,16 @@ function Landing(props) {
           <div className='column'>
             <div className='display-container'>
               <div className='display'>
-              { /*Not Logged In message */}
-                {(!auth.current) &&
+                { /*Not Logged In message */}
+                {(!user) &&
                   (<button onClick={handleLogin}>Log In To View </button>)
                 }
-                { /*Logged in, no profiles*/} 
-                {(auth.current) && (profiles.length == 0) && (
+                { /*Logged in, no profiles*/}
+                {(user) && (profiles.length == 0) && (
                   <h2>Save Profiles to have them displayed!</h2>
                 )
                 }
-              { /*Logged in, profiles*/}
+                { /*Logged in, profiles*/}
                 {(profiles.length != 0) && (<ul>
                   {profiles.map((profile) => (
                     <Profiles profile={profile} onSearch={search} onDelete={onDelete} />
@@ -168,12 +182,12 @@ function Landing(props) {
 
               </div>
               <div className='display'>
-              { /*Not Logged In message */}
-                {(!auth.current) &&
+                { /*Not Logged In message */}
+                {(!user) &&
                   (<button onClick={handleLogin}> Log In To View</button>)
                 }
-              { /*Logged in, no profiles*/}
-                {(auth.current) && (favorites.length == 0) && (
+                { /*Logged in, no profiles*/}
+                {(user) && (favorites.length == 0) && (
                   <h2>Save Favorites to have them displayed!</h2>
                 )
 
@@ -181,7 +195,7 @@ function Landing(props) {
                 { /*Logged in, profiles*/}
                 {(favorites.length != 0) && (<ul>
                   {favorites.map((item) => (
-                    <Favorites item={item} onDelete={onDelete} />
+                    <Favorites item={item} location={getLocation} onDelete={onDelete} />
 
                   ))} </ul>)}
               </div>

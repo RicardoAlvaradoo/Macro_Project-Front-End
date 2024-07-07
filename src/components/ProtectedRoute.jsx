@@ -48,4 +48,4 @@ function ProtectedRoute({ children }) {
     //login should be swapped to Functionality Limited page
     return isAuthorized ? children : <Navigate to="/login" />
 }
-export default ProtectedRoute
+export default ProtectedRoute;
