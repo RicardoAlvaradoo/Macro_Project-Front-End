@@ -21,7 +21,8 @@ function Favorites({ item, onDelete }) {
     await fetchUserData("GET", `/nearby/${restaurant}/${location.current.latitude}/${location.current.longitude}`, null).then(response => response.json().then(response => {
 
       console.log("Received data value: ", response);
-      alert(response);
+      let alert_string = "There is a " + restaurant + " " + response.data.distance.slice(0,3) + " miles away from you at " + response.data.address;
+      alert(alert_string);
     })).catch(error => {
       console.log(error);
     });

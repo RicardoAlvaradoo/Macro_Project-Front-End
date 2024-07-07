@@ -38,6 +38,16 @@ h2{
     font-size: 17px;
    
   }
+  .topnav span {
+    
+    color:  #2F4D17;
+    
+
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+   
+  }
   .topnav ul{
     list-style-type: none;
     padding-top: 12px;

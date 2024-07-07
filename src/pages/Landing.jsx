@@ -21,6 +21,7 @@ function Landing(props) {
   const [order_list, setOrders] = useState([]);
   const [message, setMessage] = useState(true);
   const [user, setUser] = useState(false);
+  const [username, setUsername] = useState(false);
   const location = useRef(null);
 
 
@@ -40,10 +41,20 @@ function Landing(props) {
       if (response){
         getProfiles();
         getFavorites();
+        getUser()
       }
     });
   }
 
+  async function getUser(){
+    await fetchUserData("GET", '/user/register', null).then(response => response.json().then(response => {
+      console.log("Received data value: ", response);
+      setUsername(response.data);
+    })).catch(error => {
+      console.log(error);
+    });
+  };
+  
   async function getProfiles() {
     await fetchUserData("GET", '/profile', null).then(response => response.json().then(response => {
       console.log("Received data value: ", response);
@@ -141,7 +152,7 @@ function Landing(props) {
 
 
     <>
-      <Nav auth={user} />
+      <Nav auth={user} username={username} />
       <div id="Landing">
 
         <div className='row'>
