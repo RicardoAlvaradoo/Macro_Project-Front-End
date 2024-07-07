@@ -7,16 +7,16 @@ import { json } from 'react-router-dom';
 function Send_Form({props, search}) {
  
   
-  const [dist, set_dist] = useState(5);
-  const MAX = 10;
+  //const [dist, set_dist] = useState(5);
+  //const MAX = 10;
   const [user, setUser] = useState(props.user)
   //popup
 
   
-  //slider logic
+  /*slider logic
   const getBackgroundSize = () => {
     return { backgroundSize: `${(dist * 100) / MAX}% 100%` };
-  };
+  };*/
   
 
   async function handleSubmit(e) {
@@ -39,6 +39,7 @@ function Send_Form({props, search}) {
           <form >
 
             <div className='Container'>
+              {/* 
               <label>Distance</label>
               <div className='sliderBox'>
                 <input type="range"
@@ -47,8 +48,9 @@ function Send_Form({props, search}) {
                   onChange={(e) => set_dist(e.target.value)}
                   style={getBackgroundSize()} value={dist}
                 />
-
+                  
               </div>
+              */}
             </div>
             <div className='Container'>
               <label >Calories   </label>
