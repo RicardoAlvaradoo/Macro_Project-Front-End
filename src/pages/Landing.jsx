@@ -21,7 +21,7 @@ function Landing(props) {
   const [order_list, setOrders] = useState([]);
   const [message, setMessage] = useState(true);
   const [user, setUser] = useState(false);
-
+  const location = useRef(null);
 
 
 
@@ -80,17 +80,9 @@ function Landing(props) {
     });
   };
 
-  async function getLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        console.log("WER AREIVE ")
-        return data = { latitude: position.coords.latitude, longitude: position.coords.longitude };
-      });
-    } else {
-      console.log("Error in getting location");
-    }
-  }
+
   async function search(user, name) {
+    
     let url;
 
     let data;
@@ -103,10 +95,11 @@ function Landing(props) {
 
       url = '/orders/';
       //get location
-      location = await getLocation();
-      data = { ...user, location: location,}
-
-    }
+      
+      console.log("current data", location.current)
+      data = { ...user, location: location.current}
+      
+     }
     await fetchUserData("POST", url, data).then(response => response.json().then(result => {
       if (!name) {
         console.log("Order list", result);
@@ -130,6 +123,19 @@ function Landing(props) {
   const handleLogin = () => {
     navigate('/login');
   }
+  async function handleSearch(user, name){
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => { 
+      console.log("WER AREIVE ", position)
+     
+      location.current = { latitude: position.coords.latitude, longitude: position.coords.longitude }
+      search(user, name);
+    });
+    
+  }else{
+    console.log(error);
+  }
+}
   console.log("RAN", favorites, profiles, user)
   return (
 
@@ -155,7 +161,7 @@ function Landing(props) {
 
 
             </div>
-            <Send_Form props={{}} search={search} />
+            <Send_Form props={{}} search={handleSearch} />
             <div id='Log-In'>
               <a href='Login'>Log in</a><span> to view previous orders and save your profile.</span>
             </div>
@@ -176,7 +182,7 @@ function Landing(props) {
                 { /*Logged in, profiles*/}
                 {(profiles.length != 0) && (<ul>
                   {profiles.map((profile) => (
-                    <Profiles profile={profile} onSearch={search} onDelete={onDelete} />
+                    <Profiles profile={profile} onSearch={handleSearch} onDelete={onDelete} />
 
                   ))} </ul>)}
 
@@ -195,7 +201,7 @@ function Landing(props) {
                 { /*Logged in, profiles*/}
                 {(favorites.length != 0) && (<ul>
                   {favorites.map((item) => (
-                    <Favorites item={item} location={getLocation} onDelete={onDelete} />
+                    <Favorites item={item}  onDelete={onDelete} />
 
                   ))} </ul>)}
               </div>

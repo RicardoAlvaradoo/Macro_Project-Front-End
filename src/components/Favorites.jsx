@@ -1,11 +1,24 @@
 import { fetchUserData } from '../services/fetchUser.js';
-
-function Favorites({ item, getLocation, onDelete }) {
-  
+import React, {  useRef } from 'react';
+function Favorites({ item, onDelete }) {
+  const location = useRef(null);
+  async function handleFavorite(restaurant){
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => { 
+      console.log("WER AREIVE ", position)
+     
+      location.current = { latitude: position.coords.latitude, longitude: position.coords.longitude }
+      onNearby(restaurant);
+    });
+    
+  }else{
+    console.log(error);
+  }
+}
   async function onNearby(restaurant) {
    
-    let location = await getLocation();
-    await fetchUserData("GET", `nearby/${restaurant}/${location.latitude}/${location.longitude}`, null).then(response => response.json().then(response => {
+    
+    await fetchUserData("GET", `/nearby/${restaurant}/${location.current.latitude}/${location.current.longitude}`, null).then(response => response.json().then(response => {
 
       console.log("Received data value: ", response);
       alert(response);
@@ -22,7 +35,7 @@ function Favorites({ item, getLocation, onDelete }) {
       <span >{item.protein}  </span>
       <span >{item.carb}  </span>
       <span >{item.calories}  </span>
-      <button className="item-button" onClick={() => onNearby(item.restaurant)}>Check Nearby</button>
+      <button className="item-button" onClick={() => handleFavorite(item.restaurant)}>Check Nearby</button>
       <button className="item-button" onClick={() => onDelete(item.id, "favorite")}>Delete</button>
     </li>)
 }
