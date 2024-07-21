@@ -9,6 +9,7 @@ export const apiGet = (options, url) => {
       if (!response.ok) {
         console.log("Network failure")
       }
+      
       return response;
     })
    

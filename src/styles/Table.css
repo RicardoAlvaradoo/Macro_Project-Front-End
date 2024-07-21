@@ -1,0 +1,62 @@
+/**
+Profiles
+*/
+
+/**
+Orders
+*/
+
+/**
+Both
+
+*/
+.span{
+
+}
+.display ul{
+    list-style-type: none;
+}
+.display li{
+    list-style-type: none;
+    background-color: #65844D ;
+    width: 90%;;
+    padding: 0;
+    margin: 0;
+}
+.display{
+    background-color: #A7BF95;
+    border-style: double;
+    float: left;
+    width: 45%;
+    align-items: center;
+}
+.display-container{
+    clear:both;
+    height: 100%;
+    display: table;
+}
+.item-button{
+    background-color: #2F4D17;
+    color: #EEFFE4;
+    border-radius: 25px;
+    overflow: hidden;
+    border-radius: 20px;
+    
+}
+.delete-button{
+    background-color: #C4A484;
+    color: #EEFFE4;
+    border-radius: 25px;
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+.row-content{
+    
+}
+.row-buttons{
+    display: table;
+}
+.table-title{
+
+}

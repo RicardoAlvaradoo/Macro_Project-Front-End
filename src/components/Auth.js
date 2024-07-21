@@ -20,6 +20,7 @@ const refreshToken = async () => {
     try {
         const res = await fetchUserData("POST", "/token/refresh/", { refreshToken: refreshToken });
         if (res.status === 200) {
+            console.log("CHECK TOKEN1 ", res.data.access);
             localStorage.setItem(ACCESS_TOKEN, res.data.access);
             return true;
         } else {
@@ -39,6 +40,7 @@ const auth = async () => {
     const decoded = jwtDecode(token);
     const tokenExpiration = decoded.exp;
     const now = Date.now() / 1000;
+    console.log("CHECK TOKEN ",  tokenExpiration, now,);
     if (tokenExpiration < now) {
         await refreshToken();
     } else {

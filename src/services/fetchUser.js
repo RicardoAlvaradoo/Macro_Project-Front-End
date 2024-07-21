@@ -2,6 +2,7 @@
 import { apiGet } from '../services/urlGate.js';
 import { ACCESS_TOKEN } from "../constants";
 import { json } from 'react-router-dom';
+import { isAuth } from '../components/Auth.js'
 export const fetchUserData = (method, params, data ) => {
   const url = params;
   const token = localStorage.getItem(ACCESS_TOKEN);
@@ -18,8 +19,8 @@ export const fetchUserData = (method, params, data ) => {
     options = {...options, body: JSON.stringify(data)};
   }
   if (token){
-     
-       options.headers['Authorization'] =   `Bearer ${token}` ;
+      
+      options.headers['Authorization'] =   `Bearer ${token}` ;
    }
   
   return apiGet(options, url );

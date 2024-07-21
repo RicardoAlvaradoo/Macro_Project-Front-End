@@ -36,10 +36,10 @@ const Popup =({children, handleSave}) => {
             {children}
             </div>
             {modal && (
-                <   div className='modal'><input name="user[profile_name]"
+                <   div className='modal'><input name="user[profile_name]" placeholder="Enter Profile Name"
                 onChange={e => setName(e.target.value)}
                      />
-                    <button onClick={toggleSend} type="submit">Name </button> </div>)
+                    <button onClick={toggleSend}  type="submit"> Save </button> </div>)
 
             }
             <button onClick={toggleModal} id="search"  >Save Profile</button>

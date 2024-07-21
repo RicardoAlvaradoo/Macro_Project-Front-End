@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fetchUserData } from '../services/fetchUser.js';
-import { Navigate, useNavigate } from "react-router-dom"
+import {  useNavigate } from "react-router-dom"
 import '../styles/landing.css'
+import '../styles/Table.css'
 import Nav from '../components/Nav'
 
 import Send_Form from '../components/Send_Form'
@@ -9,10 +10,11 @@ import Items from '../components/Items'
 import Profiles from '../components/Profiles.jsx'
 import Favorites from '../components/Favorites'
 import { isAuth } from '../components/Auth.js'
+
 function Landing(props) {
 
 
-
+  const navigate = useNavigate();
   //use function to display login message below search if user not logged in after one 
   //input
 
@@ -23,7 +25,7 @@ function Landing(props) {
   const [user, setUser] = useState(false);
   const [username, setUsername] = useState(false);
   const location = useRef(null);
-
+  const [map, setMap] = useState(null);
 
 
   useEffect(() => {getAuth()}, []);
@@ -45,6 +47,7 @@ function Landing(props) {
       }
     });
   }
+  
 
   async function getUser(){
     await fetchUserData("GET", '/user/register', null).then(response => response.json().then(response => {
@@ -74,12 +77,17 @@ function Landing(props) {
   };
   async function onDelete(id, method) {
     await fetchUserData("DELETE", `/${method}/delete/${id}`, null).then(response => {
+      if (response.status == 401){
+        const navigate = useNavigate();
+        navigate('/login');
+  
+      }
       if (response.status == 204) {
         alert("Delete Succesful!");
       } else {
         alert("Failed to Delete")
       }
-      if (method = "favorite") {
+      if (method == "favorite") {
         getFavorites();
       } else {
         getProfiles();
@@ -99,6 +107,7 @@ function Landing(props) {
     let data;
     //saving profile
     if (name) {
+      
       data = { profile_name: name, ...user }
       url = '/profile/';
     }//searching based off profile or normal search
@@ -123,6 +132,11 @@ function Landing(props) {
         setMessage(false);
 
       } else {
+        if (response.status == 401){
+          const navigate = useNavigate();
+          navigate('/login');
+    
+        }
         getProfiles();
       }
     })).catch(error => {
@@ -130,10 +144,12 @@ function Landing(props) {
     })
   };
 
-  const navigate = useNavigate();
+ 
   const handleLogin = () => {
     navigate('/login');
-  }
+  };
+
+
   async function handleSearch(user, name){
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => { 
@@ -161,7 +177,9 @@ function Landing(props) {
               {message && (<span>Find Macros
                 Input information to find menu items that meet your macro needs near you!
               </span>)}
-              {!message && (<ul>
+              {!message && (
+                
+                <ul>
                 {order_list.map((order) => (
                   <Items order={order} getFavorites={getFavorites} />
 
@@ -181,6 +199,7 @@ function Landing(props) {
           <div className='column'>
             <div className='display-container'>
               <div className='display'>
+                <div className='table-title'>Profiles</div>
                 { /*Not Logged In message */}
                 {(!user) &&
                   (<button onClick={handleLogin}>Log In To View </button>)
@@ -199,6 +218,7 @@ function Landing(props) {
 
               </div>
               <div className='display'>
+              <div className='table-title'>Orders</div>
                 { /*Not Logged In message */}
                 {(!user) &&
                   (<button onClick={handleLogin}> Log In To View</button>)
@@ -212,9 +232,11 @@ function Landing(props) {
                 { /*Logged in, profiles*/}
                 {(favorites.length != 0) && (<ul>
                   {favorites.map((item) => (
-                    <Favorites item={item}  onDelete={onDelete} />
+                    <Favorites item={item} setMap={setMap} onDelete={onDelete} />
 
                   ))} </ul>)}
+
+                <img src={map}/>
               </div>
             </div>
 
